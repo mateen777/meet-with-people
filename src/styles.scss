@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    height: 100vh;
+    margin: 0px;
+    background-color: var(--surface-ground);
+    font-weight: 400;
+    color: var(--text-color);
+    -webkit-font-smoothing: antialiased;
+}

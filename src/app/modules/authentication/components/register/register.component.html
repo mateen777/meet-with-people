@@ -1,0 +1,53 @@
+<ng-container *ngIf="data$ | async as data">
+    <div class="h-full w-full flex justify-center items-center">
+        <div class="container">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit($event)"  autocomplete="off" novalidate>
+                <h1 class="font-bold text-[32px] text-center mb-8">Sign Up</h1>
+                <div class="mb-1 min-h-[74px]">
+                    <input formControlName="username" class="input_field" type="text" placeholder="Username" autofocus>
+                    <span class="text-[#ff6347] text-xs" *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched">
+                        *this field is required
+                    </span>
+                </div>
+                <div class="mb-2 min-h-[74px]">
+                    <input formControlName="email" class="input_field" type="Email" placeholder="email" autofocus>
+                    <span class="text-[#ff6347] text-xs" *ngIf="registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched">
+                        *this field is required
+                    </span>
+                    <span class="text-[#ff6347] text-xs" *ngIf="(registerForm.get('email')?.hasError('email') || registerForm.get('email')?.hasError('pattern')) && registerForm.get('email')?.dirty">
+                        *Enter correct email (abc@xyz.com).
+                    </span>
+                </div>
+                <div class="mb-2 min-h-[74px]">
+                    <input formControlName="password" class="input_field" type="password" placeholder="Password">
+                    <span class="text-[#ff6347] text-xs" *ngIf="registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched">
+                        *this field is required
+                    </span>
+                </div>
+                <button type="submit" class="primary_btn tracking-widest" 
+                >Sign up</button>
+                <!-- [disabled] ="data.isSubmitting" [ngClass]="{'btn_disable': data.isSubmitting}" -->
+                <!-- <p>
+                <a href="">Forgot your password?</a> 
+                </p> -->
+                <p>
+                    have an account?
+                    <a class="cursor-pointer hover:underline hover:decoration-solid hover:text-[#157ace]"
+                    [routerLink]="['/auth/login']">Login</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</ng-container>
+
+
+<!-- this is html to render below template -->
+<!-- <ng-container *ngIf="data?.backendsErrors?.['username'] as errors">
+    <ng-container *ngTemplateOutlet="dynamicTemplate; context: {errors:errors,field:'username'}"></ng-container>
+</ng-container> -->
+<!-- this is the template for display Backend Error -->
+<ng-template #dynamicTemplate let-data="errors" let-fieldName="field">
+    <span class="text-[#ff6347] text-xs" *ngFor="let message of data">
+        {{fieldName}} {{message}}
+    </span>
+</ng-template>

@@ -1,0 +1,83 @@
+<div class="w-full h-full flex">
+    <header class="block fixed left-0 right-0 z-10">
+        <div class="flex p-2 w-full items-center">
+            <div class="flex items-center gap-3 pl-5 pr-8 flex-auto h-full">
+                <!-- <img class="w-16 h-8 " src="../../../../../assets/images/M.png" alt="video-camera"> -->
+                <span class="material-symbols-rounded text-5xl text-[var(--primary-color)]">videocam</span>
+                <div class="flex items-end">
+                    <h1 class="font-semibold text-base text-[var(--surface-900)]">Meet People</h1>
+                </div>
+            </div>
+            <div>
+                <span class="text-base font-semibold text-[var(--surface-900)]">
+                    {{ today | date:"h:mm"}}<span> • </span>{{ today | date:"EEE, d MMM"}}
+                <!-- {{ today | date:"MMM dd, yyyy 'at' hh:mm a" }} -->
+                </span>
+            </div>
+            <div class="flex items-center gap-4 mx-4 cursor-pointer text-[var(--surface-900)]">
+                <span class="text-3xl material-symbols-rounded hover:text-[var(--primary-color)]">
+                    settings
+                </span>
+                <span #targetEl (click)="op.toggle($event,targetEl)"
+                    class="text-[34px] material-symbols-rounded hover:text-[var(--primary-color)]">
+                    account_circle
+                </span>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="min-h-full h-auto relative">
+            <div class="h-[52px]"></div>
+            <div class="h-[calc(100vh-3.25rem)] min-h-full w-screen overflow-y-auto">
+                <div class="w-screen min-h-full inline-flex items-center">
+                    <div class="flex flex-col basis-1/2 py-4 px-12 min-w-[50%]">
+                        <div class="pb-4 text-5xl text-[var(--surface-900)]">Premium video meetings. Now free for
+                            everyone.</div>
+                        <div class="pb-12 text-lg text-[var(--surface-700)]">We re-engineered the service that we built
+                            for secure business meetings, Meet People, to make it free and available for all.</div>
+                        <div>
+                            <p-button styleClass="p-button-raised h-12 p-3 focus:shadow-none">
+                                <span class="material-symbols-rounded">video_call</span>
+                                <span class="ml-2 font-bold">New meeting</span>
+                            </p-button>
+                            <span class="p-input-icon-left ml-2">
+                                <i class="material-symbols-rounded">keyboard_keys</i>
+                                <input type="text" class="h-12 w-60" pInputText [(ngModel)]="value" />
+                            </span>
+                            <p-button styleClass="ml-2 focus:shadow-none" label="Join" (onClick)="joinRoom()"
+                                [disabled]="!value"></p-button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col basis-1/2 py-4 px-12 min-w-[50%] ">
+                        <div class="">
+                            <p-carousel [value]="products" indicatorsContentClass="p-0" indicatorStyleClass="w-2 rounded-full" [numVisible]="1" [numScroll]="1" [autoplayInterval]="5000"
+                                [circular]="true" [responsiveOptions]="responsiveOptions">
+                                <ng-template let-product pTemplate="item">
+                                    <div class="m-2 text-center">
+                                        <img [src]="product.image" class="object-cover w-[23rem] h-[23rem] rounded-full" alt="images">
+                                        <h4 class="m-0 text-[var(--primary-color)]">{{product.name}}</h4>
+                                        <p class="m-0 p-0 text-sm">{{product.description}}</p>
+                                    </div>
+                                </ng-template>
+                            </p-carousel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+
+<!-- profile icon overlay -->
+<p-overlayPanel #op [style]="{ width: '340px' }">
+    <div class="mb-2">
+        <label for="email" class="block mb-1">Email</label>
+        <input pInputText class="w-full" id="email" type="text" [(ngModel)]="email" />
+    </div>
+    <div class="">
+        <label for="room-id" class="block mb-1">Room id</label>
+        <input pInputText class="w-full" id="room-id" type="text" [(ngModel)]="roomid" />
+    </div>
+    <!-- <p-button label="Join" (onClick)="joinRoom()"></p-button> -->
+</p-overlayPanel>

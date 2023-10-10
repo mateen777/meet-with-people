@@ -1,0 +1,32 @@
+<div class="h-full w-full flex justify-center items-center">
+    <div class="container">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit($event)"  autocomplete="off" novalidate>
+            <h1 class="font-bold text-[32px] text-center mb-8">Sign In</h1>
+            <div class="mb-2 min-h-[74px]">
+                <input formControlName="email" class="input_field" type="Email" placeholder="email" autofocus>
+                <span class="text-[#ff6347] text-xs" *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched">
+                    *this field is required
+                </span>
+                <span class="text-[#ff6347] text-xs" *ngIf="(loginForm.get('email')?.hasError('email') || loginForm.get('email')?.hasError('pattern')) && loginForm.get('email')?.dirty">
+                    *Enter correct email (abc@xyz.com).
+                </span>
+            </div>
+            <div class="mb-2 min-h-[74px]">
+                <input formControlName="password" class="input_field" type="password" placeholder="Password">
+                <span class="text-[#ff6347] text-xs" *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">
+                    *this field is required
+                </span>
+            </div>
+            <button type="submit" class="primary_btn tracking-widest">Sign in</button>
+            <p>
+               <a>Forgot your password?</a> 
+            </p>
+            <p>
+                Don't have an account??
+                <a class="cursor-pointer hover:underline hover:decoration-solid hover:text-[#157ace]"
+                [routerLink]="['/auth/register']" 
+                >Create account</a>
+            </p>
+        </form>
+    </div>
+</div>
