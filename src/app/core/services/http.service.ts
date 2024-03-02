@@ -11,27 +11,27 @@ export class HttpService {
 
   constructor(private http:HttpClient) { }
 
-  requestCall(api:any,method:ApiMethod,data?:any){
+  requestCall(apiEndpoint:any,method:ApiMethod,data?:any){
     let response:any;
 
     switch (method) {
       case ApiMethod.GET:
-        response = this.http.get<any>(`${environment.url}${api}`).pipe(
+        response = this.http.get<any>(`${environment.url}${apiEndpoint}`).pipe(
           catchError((err)=> this.handleError(err)))
         break;
 
       case ApiMethod.POST:
-        response = this.http.post<any>(`${environment.url}${api}`,data).pipe(
+        response = this.http.post<any>(`${environment.url}${apiEndpoint}`,data).pipe(
           catchError((err)=> this.handleError(err)))
         break;
 
       case ApiMethod.PUT:
-        response = this.http.put<any>(`${environment.url}${api}`,data).pipe(
+        response = this.http.put<any>(`${environment.url}${apiEndpoint}`,data).pipe(
           catchError((err)=> this.handleError(err)))
         break;
 
       case ApiMethod.DELETE:
-        response = this.http.delete<any>(`${environment.url}${api}`).pipe(
+        response = this.http.delete<any>(`${environment.url}${apiEndpoint}`).pipe(
           catchError((err)=> this.handleError(err)))
         break;
       default:

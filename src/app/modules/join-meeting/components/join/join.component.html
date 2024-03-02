@@ -1,7 +1,174 @@
-<div class="flex justify-center flex-col items-center">
-    <h1>Room join</h1>
-    <!-- <span *ngIf="remoteSocketId.id">{{remoteSocketId.email}} joined</span> -->
-    <p-button label="Join" (onClick)="call()"></p-button>
+<div class="flex w-full h-full">
+	<header class="block fixed left-0 right-0 z-10">
+        <div class="flex p-2 w-full items-center">
+            <div class="flex items-center gap-3 pl-5 pr-8 flex-auto h-full">
+                <!-- <img class="w-16 h-8 " src="../../../../../assets/images/M.png" alt="video-camera"> -->
+                <span class="material-symbols-rounded text-5xl text-[var(--primary-color)]">videocam</span>
+                <div class="flex items-end">
+                    <h1 class="font-semibold text-base text-[var(--surface-900)]">Meet People</h1>
+                </div>
+                <div class="flex ml-24">
+                    <!-- <h1 class="font-semibold text-base text-[var(--surface-900)]">ID:{{peerid}}</h1> -->
+                </div>
+            </div>
+            <div>
+                <span class="text-base font-semibold text-[var(--surface-900)]">
+                    <!-- {{ today | date:"h:mm"}}<span> • </span>{{ today | date:"EEE, d MMM"}} -->
+                    <!-- {{ today | date:"MMM dd, yyyy 'at' hh:mm a" }} -->
+                </span>
+            </div>
+            <div class="flex items-center gap-4 mx-4 cursor-pointer text-[var(--surface-900)]">
+                <!-- <span class="text-3xl material-symbols-rounded hover:text-[var(--primary-color)]">
+                    settings
+                </span> -->
+                <!-- <span #targetEl (click)="op.toggle($event,targetEl)"
+                    class="text-[34px] material-symbols-rounded hover:text-[var(--primary-color)]">
+                    account_circle
+                </span> -->
+            </div>
+        </div>
+    </header>
+	<main class="w-full">
+        <div class="min-h-full h-auto relative">
+            <div class="h-[52px]"></div>
+            <div class="h-[calc(100vh-3.25rem)] min-h-full overflow-y-auto">
+                <div class="w-full min-h-full inline-flex items-center justify-around">
+                    <section class="max-w-3xl flex-grow">
+                        <div class="flex flex-col">
+                            <div class="relative m-3 h-[416px] bg-[--surface-card] rounded-xl overflow-hidden">
+                                <div class="absolute top-0 left-0 z-10 w-full flex items-center justify-between p-3 text-xl text-[var(--surface-900)]">
+                                    <span>{{userName}}</span>
+                                    <span class="material-symbols-rounded cursor-pointer">more_vert</span>
+                                </div>
+                                <div class="w-full h-full">
+                                    <video class="object-cover w-full h-full absolute top-0 left-0 pointer-events-none -scale-x-100" autoplay [srcObject]="remoteVideo"></video>
+                                    <div *ngIf="!isAudioAllowed || !isVideoAllowed" class="absolute w-full h-full top-0 left-0 flex flex-col gap-1 items-center justify-center">
+                                        <span *ngIf="!isAudioAllowed && !isVideoAllowed" class="text-xl">{{'Do you want people to see and hear you in the meeting?'}}</span>
+                                        <span *ngIf="isAudioAllowed && !isVideoAllowed" class="text-xl">{{'Do you want people to see you in the meeting?'}}</span>
+                                        <span *ngIf="!isAudioAllowed && isVideoAllowed && !this.remoteVideo" class="text-xl">{{'Do you want people to hear you in the meeting?'}}</span>
+                                        <button *ngIf="!this.remoteVideo" pButton class="focus:shadow-none p-button-raised" (click)="askPermission()">
+                                            <span *ngIf="!isAudioAllowed && !isVideoAllowed" class="font-semibold">Allow Microphone and Camera</span>
+                                            <span *ngIf="isAudioAllowed && !isVideoAllowed" class="font-semibold">Allow Camera</span>
+                                            <span *ngIf="!isAudioAllowed && isVideoAllowed" class="font-semibold">Allow Microphone</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-0 left-0 z-10 w-full flex gap-4 items-center justify-center p-3 text-base">
+                                    <button pButton (click)="toggleMic($event)" pTooltip="Turn on microphone(ctrl + d)" tooltipStyleClass="max-w-none text-sm" [autoHide]="false" tooltipPosition="top" class="mic w-14 h-14 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': isMicOn,'hover:bg-[#ef44440a]':!isMicOn,'active_shadow':isMicOn,'deactive_shadow':!isMicOn}">
+                                        <span *ngIf="isMicOn" class="material-symbols-rounded cursor-pointer text-3xl rounded-full flex items-center justify-center">mic</span>
+                                        <span *ngIf="!isMicOn"class="material-symbols-rounded cursor-pointer text-red-500 text-3xl rounded-full flex items-center justify-center">mic_off</span>
+                                    </button>
+                                    <button pButton (click)="toggleVideo($event)" pTooltip="Turn on camera(ctrl + e)" tooltipStyleClass="max-w-none text-sm" tooltipPosition="top" class="mic w-14 h-14 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': isVideoOn,'hover:bg-[#ef44440a]':!isVideoOn,'active_shadow':isVideoOn,'deactive_shadow':!isVideoOn}">
+                                        <span *ngIf="isVideoOn" class="material-symbols-rounded cursor-pointer text-3xl rounded-full flex items-center justify-center ">videocam</span>
+                                        <span *ngIf="!isVideoOn" class="material-symbols-rounded cursor-pointer text-red-500 text-3xl rounded-full flex items-center justify-center">videocam_off</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 px-3 justify-between">
+                                <div class="flex-auto">
+                                    <ng-container *ngTemplateOutlet="dropdownTemplate; 
+                                    context: {$implicit: {
+                                        options:audioDevices,
+                                        ngModel:selectedMic,
+                                        emptyMessage:'No Mics Available',
+                                        placeholder:'Select a Microphone',
+                                        icon_name:'mic',
+
+                                    }}">
+                                    </ng-container>
+                                </div>
+                                <div class="flex-auto">
+                                    <ng-container *ngTemplateOutlet="dropdownTemplate; 
+                                    context: {$implicit: {
+                                        options:speakers,
+                                        ngModel:selectedSpeaker,
+                                        emptyMessage:'No Speaker Available',
+                                        placeholder:'Select a Speaker',
+                                        icon_name:'volume_up',
+
+                                    }}">
+                                    </ng-container>
+                                </div>
+                                <div class="flex-auto">
+                                    <ng-container *ngTemplateOutlet="dropdownTemplate; 
+                                    context: {$implicit: {
+                                        options:videoDevices,
+                                        ngModel:selectedCamera,
+                                        emptyMessage:'No Camera Available',
+                                        placeholder:'Select a Camera',
+                                        icon_name:'photo_camera',
+
+                                    }}">
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="max-w-sm flex-grow flex">
+                        <div class="text-center">
+                            <h1>Ready to join?</h1>
+                            <h4>No one else is here</h4>
+                            <div class="flex gap-2">
+                                <div class="flex-grow">
+                                    <p-button (onClick)="joinNow()" styleClass="focus:shadow-none h-[50px] p-button-rounded" label="Join Now" type="button" ></p-button>
+                                </div>
+                                <div class="flex-grow">
+                                    <p-button styleClass="focus:shadow-none h-full p-button-rounded" label="Present" type="button" >
+                                        <span  class="material-symbols-rounded mr-2 rounded-full flex items-center justify-center">present_to_all</span>
+                                    </p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+	</main>
 </div>
 
-<video #video id="my-video" autoplay [srcObject]="vid"></video>
+<!-- dropdown template -->
+<ng-template #dropdownTemplate let-data>
+    <p-dropdown [options]="data.options" [placeholder]="data.placeholder" optionLabel="label" styleClass="w-full min-w-[234px] h-[50px]" [(ngModel)]="data.ngModel" [emptyMessage]="data.emptyMessage">
+        <ng-template  pTemplate="selectedItem">
+            <div class="flex items-center gap-2" *ngIf="data.ngModel">
+                <span  class="material-symbols-rounded rounded-full flex items-center justify-center">{{data.icon_name}}</span>
+                <div class="w-28 truncate">{{ data.ngModel.label }}</div>
+            </div>
+        </ng-template>
+        <ng-template let-country pTemplate="item">
+            <div class="flex items-center gap-2">
+                <span  class="material-symbols-rounded rounded-full flex items-center justify-center">{{data.icon_name}}</span>
+                <div>{{ country.label }}</div>
+            </div>
+        </ng-template>
+    </p-dropdown>
+</ng-template>
+
+<!-- askpermission modal -->
+<p-dialog [dismissableMask]="false" [(visible)]="askPermissionModal" contentStyleClass="text-center pt-8" [modal]="true" styleClass="w-[450px] lg:w-[668px] sm:w-[450px] md:w-[640px]" [showHeader]="false" [draggable]="false" [resizable]="false">
+    <img class="w-96 h-96 rounded-lg" src="../../../../../assets/svgs/permissions_flow_allow.svg" alt="svg">
+    <h2 class="mt-2 mb-2">click <span class="font-bold ">Allow</span></h2>
+    <span>You can still turn off your microphone and camera anytime in the meeting.</span>
+</p-dialog>
+<!-- end -->
+
+<!-- askpermission denied modal -->
+<p-dialog [dismissableMask]="true" [(visible)]="permissionDeniedModal" contentStyleClass="flex gap-6 p-4 pt-0 flex-col sm:flex-row" [modal]="true" styleClass="denied_modal w-[450px] lg:w-[880px] sm:w-[722px] md:w-[756px]" [draggable]="false" [resizable]="false">
+    <img class="h-72 md:w-[30rem] md:h-[22rem] sm:w-96 sm:h-72 rounded-lg" src="../../../../../assets/svgs/permissions_flow_meet_blocked.svg" alt="svg">
+    <div class="flex flex-col justify-center">
+        <h2 class="mt-2 mb-4">Meet is blocked from using your microphone and camera</h2>
+        <ol class="list-decimal pl-6">
+            <li>Click the  
+                <span class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="25" width="25" viewBox="0 -960 960 960"><path fill="currentColor" d="M700-130q-58 0-99-41t-41-99q0-58 41-99t99-41q58 0 99 41t41 99q0 58-41 99t-99 41Zm-.235-60Q733-190 756.5-213.265q23.5-23.264 23.5-56.5Q780-303 756.735-326.5q-23.264-23.5-56.5-23.5Q667-350 643.5-326.735q-23.5 23.264-23.5 56.5Q620-237 643.265-213.5q23.264 23.5 56.5 23.5ZM120-240v-60h360v60H120Zm140-310q-58 0-99-41t-41-99q0-58 41-99t99-41q58 0 99 41t41 99q0 58-41 99t-99 41Zm-.235-60Q293-610 316.5-633.265q23.5-23.264 23.5-56.5Q340-723 316.735-746.5q-23.264-23.5-56.5-23.5Q227-770 203.5-746.735q-23.5 23.264-23.5 56.5Q180-657 203.265-633.5q23.264 23.5 56.5 23.5ZM480-660v-60h360v60H480Z"></path>
+                    </svg> 
+                </span>
+                page info icon in your browser's address bar
+            </li>
+            <li class="mt-2">
+                Turn on microphone and camera.
+            </li>
+        </ol>
+    </div>
+</p-dialog>
+<!-- end -->

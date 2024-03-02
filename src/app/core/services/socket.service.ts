@@ -1,6 +1,7 @@
 import { Injectable, OnInit, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
+import { Socket } from 'ngx-socket-io';
 import { HttpService } from './http.service';
 import { ApiMethod, Webrtc } from '../constants/apiRestRequest';
 
@@ -13,14 +14,69 @@ export class SocketService implements OnInit{
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
   public userJoined$: BehaviorSubject<string> = new BehaviorSubject('');
 
-  constructor() {}
-
-  ngOnInit(): void {
-    
+  private socket!:Socket;
+  constructor() {
+    this.socket = new Socket({
+      url: "http://localhost:8000",
+      options: {},
+     });
+    // this.initSocketConnection();
   }
 
-  // socket = io('http://localhost:8000');
-  socket!:any;
+  // private socket:any;
+  
+  ngOnInit(): void {
+    console.log('initSocket started');
+    // this.initSocketConnection();
+  }
+
+  initSocketConnection(){
+    // this.socket = io('http://localhost:8000');
+    this.socket.on("connect", () => {
+      console.log('abcdefgh');
+      // console.log(this.socket.id,'connected');
+    });
+    this.socket.on("disconnect", () => {
+      // console.log(this.socket.id,'disconnected');
+    });
+
+    this.socket.on("connect_error", () => {
+      console.log('connect_error');
+    });
+    this.socket.on("from", (res:any) => {
+      console.log(res,'pp[p');
+    });
+  }
+
+  get getSocket(){
+    return this.socket;
+  }
+
+  // this method is used to start connection/handhshake of socket with server
+ connectSocket(message:any) {
+  this.socket.emit('connect', message);
+ }
+
+ // this method is used to get response from server
+ connectEvent() {
+  return this.socket.fromEvent('connect');
+ }
+ disconnectEvent() {
+  return this.socket.fromEvent('disconnect');
+ }
+
+
+ // this method is used to end web socket connection
+ disconnectSocket() {
+  this.socket.disconnect();
+ }
+
+
+  sendMessage(){
+    this.socket.emit('check','dwadaw')
+  }
+
+  // socket!:any;
 
   public joinRoom(payload:any) {
     this.socket.emit('room:join', payload);

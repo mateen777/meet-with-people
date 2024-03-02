@@ -7,21 +7,24 @@
                 <div class="flex items-end">
                     <h1 class="font-semibold text-base text-[var(--surface-900)]">Meet People</h1>
                 </div>
+                <div class="flex ml-24">
+                    <!-- <h1 class="font-semibold text-base text-[var(--surface-900)]">ID:{{peerid}}</h1> -->
+                </div>
             </div>
             <div>
                 <span class="text-base font-semibold text-[var(--surface-900)]">
                     {{ today | date:"h:mm"}}<span> • </span>{{ today | date:"EEE, d MMM"}}
-                <!-- {{ today | date:"MMM dd, yyyy 'at' hh:mm a" }} -->
+                    <!-- {{ today | date:"MMM dd, yyyy 'at' hh:mm a" }} -->
                 </span>
             </div>
             <div class="flex items-center gap-4 mx-4 cursor-pointer text-[var(--surface-900)]">
                 <span class="text-3xl material-symbols-rounded hover:text-[var(--primary-color)]">
                     settings
                 </span>
-                <span #targetEl (click)="op.toggle($event,targetEl)"
+                <!-- <span #targetEl (click)="op.toggle($event,targetEl)"
                     class="text-[34px] material-symbols-rounded hover:text-[var(--primary-color)]">
                     account_circle
-                </span>
+                </span> -->
             </div>
         </div>
     </header>
@@ -32,29 +35,49 @@
                 <div class="w-screen min-h-full inline-flex items-center">
                     <div class="flex flex-col basis-1/2 py-4 px-12 min-w-[50%]">
                         <div class="pb-4 text-5xl text-[var(--surface-900)]">Premium video meetings. Now free for
-                            everyone.</div>
+                            everyone.
+                        </div>
                         <div class="pb-12 text-lg text-[var(--surface-700)]">We re-engineered the service that we built
-                            for secure business meetings, Meet People, to make it free and available for all.</div>
-                        <div>
-                            <p-button styleClass="p-button-raised h-12 p-3 focus:shadow-none">
-                                <span class="material-symbols-rounded">video_call</span>
-                                <span class="ml-2 font-bold">New meeting</span>
-                            </p-button>
-                            <span class="p-input-icon-left ml-2">
-                                <i class="material-symbols-rounded">keyboard_keys</i>
-                                <input type="text" class="h-12 w-60" pInputText [(ngModel)]="value" />
-                            </span>
-                            <p-button styleClass="ml-2 focus:shadow-none" label="Join" (onClick)="joinRoom()"
-                                [disabled]="!value"></p-button>
+                            for secure business meetings, Meet People, to make it free and available for all.
+                        </div>
+                        <div class="">
+                            <form [formGroup]="form" (ngSubmit)="GoToJoinRoom()">
+                                <div class="flex flex-wrap gap-1">
+                                    <p-button type="button" (click)="getRoomId()" styleClass="p-button-raised h-full p-3 focus:shadow-none">
+                                        <span class="material-symbols-rounded">video_call</span>
+                                        <span class="ml-2 font-bold">New meeting</span>
+                                    </p-button>
+                                    <input type="text" formControlName="userName" maxlength="36" class="flex-auto focus:shadow-none" placeholder="Username" pInputText  />
+                                    <span class="flex-auto p-input-icon-left h-full">
+                                        <i class="material-symbols-rounded">keyboard_keys</i>
+                                        <input type="text" formControlName="roomId" class="w-full focus:shadow-none" pInputText />
+                                    </span>
+                                    <p-button styleClass="focus:shadow-none h-full" label="Join" type="submit"
+                                        [disabled]="form.invalid">
+                                    </p-button>
+                                    <div class="w-full h-5">
+                                        <small class="p-error" *ngIf="(form.get('roomId')?.dirty || form.get('roomId')?.touched) &&
+                                            form.get('roomId')?.hasError('required')">
+                                            this field is required.
+                                        </small>
+                                        <small class="p-error" *ngIf="(form.get('roomId')?.dirty || form.get('roomId')?.touched) &&
+                                            form.get('roomId')?.hasError('invalidId') && form.get('roomId')?.value">
+                                            invalid Id
+                                        </small>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="flex flex-col basis-1/2 py-4 px-12 min-w-[50%] ">
                         <div class="">
-                            <p-carousel [value]="products" indicatorsContentClass="p-0" indicatorStyleClass="w-2 rounded-full" [numVisible]="1" [numScroll]="1" [autoplayInterval]="5000"
-                                [circular]="true" [responsiveOptions]="responsiveOptions">
+                            <p-carousel [value]="products" indicatorsContentClass="p-0"
+                                indicatorStyleClass="w-2 rounded-full" [numVisible]="1" [numScroll]="1"
+                                [autoplayInterval]="5000" [circular]="true" [responsiveOptions]="responsiveOptions">
                                 <ng-template let-product pTemplate="item">
                                     <div class="m-2 text-center">
-                                        <img [src]="product.image" class="object-cover w-[23rem] h-[23rem] rounded-full" alt="images">
+                                        <img [src]="product.image" class="object-cover w-[23rem] h-[23rem] rounded-full"
+                                            alt="images">
                                         <h4 class="m-0 text-[var(--primary-color)]">{{product.name}}</h4>
                                         <p class="m-0 p-0 text-sm">{{product.description}}</p>
                                     </div>
@@ -77,7 +100,33 @@
     </div>
     <div class="">
         <label for="room-id" class="block mb-1">Room id</label>
-        <input pInputText class="w-full" id="room-id" type="text" [(ngModel)]="roomid" />
+        <input pInputText class="w-full" id="room-id" type="text" />
     </div>
     <!-- <p-button label="Join" (onClick)="joinRoom()"></p-button> -->
 </p-overlayPanel>
+
+<!-- modal for sessionid or roomid -->
+<p-dialog [dismissableMask]="true" [(visible)]="visible" [modal]="true" [style]="{ width: '35vw' }" [draggable]="false" [resizable]="false">
+    <ng-template pTemplate="header">
+        <span class="text-lg font-medium">Here's the RoomId to your meeting</span>
+    </ng-template>
+    <label for="id" class="block mb-4">Copy this Session Id and send it to people that you want to meet with. Make sure that you save it so that you can use it later, too</label>
+    <span class="p-input-icon-right w-full h-full">
+        <i *ngIf="copyIconShow" class="material-symbols-rounded cursor-pointer -mt-3 hover:text-[var(--primary-color)]" (click)="copyRoomId()">content_copy</i>
+        <!-- <i *ngIf="!copyIconShow" class="material-symbols-rounded cursor-pointer animate-spin -mt-3 text-[var(--primary-color)]">done</i> -->
+        <i  *ngIf="!copyIconShow" class="-mt-3">
+            <div class="checkbox-wrapper-15">
+                <input class="inp-cbx" id="cbx-15" type="checkbox" [(ngModel)]="copyCheckbox"  readonly style="display: none;"/>
+                <label class="cbx">
+                  <span>
+                    <svg width="12px" height="9px" viewbox="0 0 12 9">
+                      <polyline points="1 5 4 8 11 1"></polyline>
+                    </svg>
+                  </span>
+                </label>
+            </div>
+        </i>
+        <input pInputText class="w-full focus:shadow-none focus:border-[var(--surface-border)] hover:border-[var(--surface-border)]" id="id" type="text" [(ngModel)]="gen_roomid" readonly/>
+    </span>
+</p-dialog>
+<!-- end -->

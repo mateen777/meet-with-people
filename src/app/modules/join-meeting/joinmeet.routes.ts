@@ -5,11 +5,11 @@ import { ConsumerComponent } from './components/consumer/consumer.component';
 export const joinRoutes: Routes = [
     {
         path:'',
-        redirectTo:'page',
+        redirectTo:':id',
         pathMatch:'full'
     },
     {
-        path:'page',
+        path:':id',
         component:JoinComponent
     },
     {

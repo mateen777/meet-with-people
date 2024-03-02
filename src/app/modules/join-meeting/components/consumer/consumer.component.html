@@ -1,1 +1,3 @@
-<video #video id="my-video" autoplay [srcObject]="vid"></video>
+<p-button label="Consume" (onClick)="call()"></p-button>
+<video #video id="my-video1" autoplay [srcObject]="vid" (loadedmetadata)="onLoadedMetadata($event)"></video>
+<video #video id="my-video2" autoplay [srcObject]="remoteStream" (loadedmetadata)="onLoadedMetadata($event)"></video>

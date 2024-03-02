@@ -1,30 +1,57 @@
+//Angular imports
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+
+// primeNg imports
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { SocketService } from 'src/app/core/services/socket.service';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CarouselModule } from 'primeng/carousel';
+import { DialogModule } from 'primeng/dialog';
 
+// Service imports
+import { CallService } from 'src/app/core/services/call.service';
+import { generateUUID4,isValidUUID } from "src/app/core/utils/helper";
+
+const angulaModules:any[] = [
+  CommonModule, FormsModule, RouterModule, ReactiveFormsModule
+];
+
+const primeNgModules:any[] = [
+  DialogModule, CarouselModule, CardModule, ButtonModule, InputTextModule, OverlayPanelModule
+]; 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, CarouselModule, CardModule, ButtonModule, InputTextModule, OverlayPanelModule],
+  imports: [...angulaModules, ...primeNgModules],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
+  form!:FormGroup;
   today: number = Date.now();
   email: any;
-  roomid: any;
+  gen_roomid: any;
   value: any;
+  name: any;
+  
+  copyIconShow:boolean = true;
+  copyCheckbox:boolean = false;
+
+  //openvidu
+  visible:boolean = false;
+	loading: boolean = false;
+  //end openvidu
+
   // services
-  socketService = inject(SocketService);
+  callService = inject(CallService);
   router = inject(Router);
+  private fb:FormBuilder = inject(FormBuilder);
+   
 
   products: any[] = [
     {
@@ -64,20 +91,45 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  ngOnInit() {
-    // this.socketService.confirmationFromRoomJoin().subscribe((message: any) => {
-    //   // this.messageList.push(message);
-    //   console.log(message);
-    //   if (message) {
-    //     this.router.navigate(['/join/page'])
-    //   }
-    // });
+ngOnInit() {
+  this.form = this.fb.group({
+    userName: ['', Validators.required],
+    roomId: ['', [Validators.required, this.ValidateRoomId]]
+  });
+}
 
+ValidateRoomId(control: AbstractControl) {
+  if (!isValidUUID(control.value)) {
+    return { invalidId: true };
   }
+  return null;
+}
 
-  joinRoom() {
-    // this.socketService.joinRoom({ email: this.email, roomid: this.roomid });
+getRoomId(){
+  this.visible = true;
+  this.gen_roomid = generateUUID4();
+}
 
-    this.router.navigate(['join'])
+GoToJoinRoom() {
+  const { userName,roomId } = this.form.getRawValue();
+  this.router.navigate(['join',roomId],{
+    queryParams:{userName}
+  });
+}
+
+async copyRoomId(){
+  try {
+    await navigator.clipboard.writeText(this.gen_roomid);
+    this.copyIconShow = false;
+    setTimeout(() => {
+      this.copyCheckbox = true;
+    }, 10);
+    setTimeout(() => {
+      this.copyIconShow = true;
+      this.copyCheckbox = false;
+    }, 1500);
+  } catch (err) {
+    console.error('Failed to copy: ', err);
   }
+}
 }
