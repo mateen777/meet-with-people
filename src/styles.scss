@@ -7,6 +7,12 @@
     box-sizing: border-box;
 }
 
+.noto-color-emoji-regular {
+    font-family: "Noto Color Emoji", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }  
+
 body{
     height: 100vh;
     margin: 0px;
@@ -32,5 +38,94 @@ body{
 
     .p-dialog-header{
         padding: 8px;
+    }
+}
+
+.tooltip-padding{
+
+    .p-tooltip-arrow{
+        display: none !important;
+    }
+    .p-tooltip-text{
+        padding: 4px 8px;
+    }
+}
+
+.menu_item{
+
+    .p-menuitem-link{
+        padding: 0.75rem !important;
+        width: 100%;
+
+        .p-menuitem-text{
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+    }
+}
+
+.emojicolor_item{
+
+    .p-menuitem-link{
+        padding: 0.5rem 0.25rem !important;
+        width: 100%;
+        justify-content: center;
+        // .p-menuitem-text{
+        //     display: flex;
+        //     align-items: center;
+        //     width: 100%;
+        //     gap: 10px;
+        // }
+    }
+}
+
+.sidenav{
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    overflow: hidden;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    bottom: 12px;
+    transform: none;
+    transition: transform .2s cubic-bezier(.4,0,.2,1), bottom .5s cubic-bezier(0.4,0,0.2,1);
+    width: 360px;
+    background-color: rebeccapurple;
+}
+
+.close_sidenav{
+    transform: translateX(calc(360px + 16px));
+}
+
+.emoji-container{
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    overflow: hidden;
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    // transform: none;
+    transition: transform .2s cubic-bezier(.4,0,.2,1), bottom .2s cubic-bezier(0.4,0,0.2,1), height .2s ease;
+    width: 100%;
+    height: 0px;
+    // background-color: rgba(127, 255, 212, 0.801);
+}
+
+.close-emoji-container{
+    height: 40px;
+}
+.close-emoji-container:hover{
+    .emoji-btn{
+        opacity: 1;
     }
 }

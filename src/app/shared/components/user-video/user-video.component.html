@@ -1,0 +1,40 @@
+<div class="w-full h-full rounded-xl">
+    <!-- border-2 border-solid border-red-700 -->
+    <!-- <div class="absolute top-0 left-0 z-10">Remote Video</div> -->
+    <video *ngIf="videoStream" [ngClass]="{'object-cover': users?.length > 1,'object-contain':users?.length == 1}" class="w-full h-full absolute top-0 left-0 pointer-events-none -scale-x-100" autoplay muted [srcObject]="videoStream"></video>
+    <video *ngIf="screenStream" class="w-full h-full object-contain absolute top-0 left-0 pointer-events-none " autoplay muted [srcObject]="screenStream"></video>
+    <audio *ngIf="audioStream && id != socketService.socketId" class="hidden" autoplay [srcObject]="audioStream"></audio>
+</div>
+<div *ngIf="!screenStream" class="block absolute top-2 right-4">
+    <span *ngIf="!audioStream" class="material-symbols-rounded text-xl rounded-full flex items-center justify-center">mic_off</span>
+    <div *ngIf="audioStream" id="audioVisualizer" #audioVisualizer>
+        <div id="left" #left></div>
+        <div id="middle" #middle></div>
+        <div id="right" #right></div>
+    </div>
+</div>
+<ng-container *ngIf="!screenStream">
+    <div class="flex items-center absolute left-1 bottom-[6px]">
+        <div class="mx-3 pr-1 flex items-center overflow-hidden">
+            <div *ngIf="isHandRaised" class="hand-raise"></div>
+            <span *ngIf="isHandRaised" class="hand material-symbols-rounded">front_hand</span>
+            <div class="block text-sm uppercase z-50" [ngClass]="{'expand_name':isHandRaised}">
+                {{userName}}
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<div *ngIf="!videoStream && !screenStream" class="w-full h-full rounded-xl border-none absolute top-0 left-0 flex flex-col items-center justify-center">
+    <div class="max-w-[10rem] w-[30%] relative">
+        <div class="h-0 pb-[100%]"></div>
+        <!-- <ng-container *ngIf="peer.image || peer.avatar">
+            <img class="inline-block align-middle h-full w-full absolute left-0 top-0 border-none rounded-[50%]" [src]="peer.image || peer.avatar" alt="profile-pic">
+        </ng-container> -->
+        <ng-container >
+            <div class="inline-block align-middle h-full w-full absolute left-0 top-0 border-none rounded-[50%]" [ngStyle]="{'backgroundColor': bg_color, 'color': '#ffffff'}">
+                <span class="font_size w-full h-full flex items-center justify-center uppercase">{{ userName?.charAt(0) }}</span>
+            </div>
+        </ng-container>
+    </div>
+</div>

@@ -3,7 +3,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 // import { io } from 'socket.io-client';
 import { Socket } from 'ngx-socket-io';
 import { HttpService } from './http.service';
-import { ApiMethod, Webrtc } from '../constants/apiRestRequest';
+import { ApiMethod } from '../constants/apiRestRequest';
+import { MediasoupService } from './mediasoup.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +28,7 @@ export class SocketService implements OnInit{
   // private socket:any;
   
   ngOnInit(): void {
-    console.log('initSocket started');
+    console.log('initSocket started',this.socket);
     // this.initSocketConnection();
   }
 
@@ -52,17 +54,26 @@ export class SocketService implements OnInit{
     return this.socket;
   }
 
+  get socketId(){
+    return this.socket.ioSocket.id;
+  }
+
   // this method is used to start connection/handhshake of socket with server
  connectSocket(message:any) {
   this.socket.emit('connect', message);
  }
 
  // this method is used to get response from server
- connectEvent() {
-  return this.socket.fromEvent('connect');
- }
- disconnectEvent() {
-  return this.socket.fromEvent('disconnect');
+//  connectEvent() {
+//   return this.socket.fromEvent('connect');
+//  }
+//  disconnectEvent() {
+//   return this.socket.fromEvent('disconnect');
+//  }
+
+ userJoinedEvent(roomId:string) {
+  const eventName = roomId + 'joinedinroom';
+  return this.socket.fromEvent(eventName);
  }
 
 
@@ -73,37 +84,22 @@ export class SocketService implements OnInit{
 
 
   sendMessage(){
-    this.socket.emit('check','dwadaw')
+    this.socket.emit('joinRoom','awad',(response:any) => {
+      console.log(response);
+    })
   }
 
-  // socket!:any;
+  fromEvent(eventName:string) {
+    return this.socket.fromEvent(eventName);
+   }
 
-  public joinRoom(payload:any) {
-    this.socket.emit('room:join', payload);
-  }
-
-  public confirmationFromRoomJoin = () => {
-    this.socket.on('room:join', (message:any) =>{
-      this.message$.next(message);
+  emitSocketEvent(eventName: string, payload: any, extras?: any): Observable<any> {
+    return new Observable((observer) => {
+      this.socket.emit(eventName, payload, (response: any) => {
+        observer.next(response); // Emit the response to observers
+        observer.complete(); // Complete the observable
+      });
     });
-    
-    return this.message$.asObservable();
-  };
-
-  public userJoined = () => {
-    this.socket.on('user:joined', (user:any) =>{
-      this.userJoined$.next(user);
-    });
-    
-    return this.userJoined$.asObservable();
-  };
-
-  broadcast(payload:any):Observable<any>{
-    return this.http.requestCall(Webrtc.broadcast,ApiMethod.POST,payload);
-  }
-
-  consumer(payload:any):Observable<any>{
-    return this.http.requestCall(Webrtc.consumer,ApiMethod.POST,payload);
   }
 
 

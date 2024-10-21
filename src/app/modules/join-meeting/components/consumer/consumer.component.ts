@@ -98,11 +98,11 @@ async handleonnegotiationneeded(peer:any) {
     //     body: JSON.stringify(payload),
     // })).json();
     console.log(peer.localDescription,'localDescription');
-    this.socketService.consumer(payload).subscribe((response:any)=>{
+    // this.socketService.consumer(payload).subscribe((response:any)=>{
       
-        console.log(response.sdp,'from server consumer');
-        peer.setRemoteDescription(new RTCSessionDescription(response.sdp));
-      })
+    //     console.log(response.sdp,'from server consumer');
+    //     peer.setRemoteDescription(new RTCSessionDescription(response.sdp));
+    //   })
 
 }
 

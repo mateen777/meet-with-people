@@ -1,7 +1,7 @@
 import { Injectable, OnInit, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpService } from './http.service';
-import { ApiMethod, Webrtc } from '../constants/apiRestRequest';
+import { ApiMethod } from '../constants/apiRestRequest';
 import { Peer } from "peerjs";
 import { Router } from '@angular/router';
 

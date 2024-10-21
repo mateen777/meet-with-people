@@ -1,0 +1,122 @@
+.emojies{
+    background: #071426;
+    border-radius: 2.25rem;
+    display: flex;
+    // flex-direction: row-reverse;
+    flex-shrink: 1;
+    height: 2.5rem;
+    max-width: 100%;
+    min-width: 12.5rem;
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+}
+
+.main-container {
+    .user-container {
+        @apply grid-cols-1;
+
+        // sm
+        @media screen and (min-width: 640px) {
+            @apply sm:grid-cols-2;
+        }
+
+        // md
+        @media screen and (min-width: 768px) {
+            @apply md:grid-cols-3;
+        }
+
+        // lg
+        @media screen and (min-width: 1024px) {
+            // Define styles for lg screen size here
+        }
+
+        // xl
+        @media screen and (min-width: 1280px) {
+            // Define styles for xl screen size here
+        }
+
+        // 2xl
+        @media screen and (min-width: 1536px) {
+            // Define styles for 2xl screen size here
+        }
+    }
+}
+
+
+
+// .main-container{
+
+//     .user-container{
+//         @apply grid-cols-1
+//     } 
+// // sm
+// @media screen and (min-width: 640px){
+//     .main-container > .user-container {
+//         @apply sm:grid-cols-2
+//     }
+// }
+// // md
+// @media screen and (min-width: 768px){
+//     .main-container > .user-container {
+//         @apply md:grid-cols-3
+//     }
+// }
+// // lg
+// @media screen and (min-width: 1024px){
+    
+// }
+// // xl
+// @media screen and (min-width: 1280px){
+    
+// }
+// // 2xl
+// @media screen and (min-width: 1536px){
+   
+// }
+// }
+
+.users5{
+    @apply w-[25rem] h-[16rem]
+}
+.users5Nav{
+    @apply w-[19rem] h-[16rem]
+}
+
+.users6{
+    @apply w-[23rem] h-[16rem]
+}
+.users6Nav{
+    @apply w-[20rem] h-[13rem]
+}
+
+.reaction-display {
+    position: fixed;
+    bottom: 120px;
+    // left: 20%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    animation: fadeOut 3s linear;
+  }
+  
+  .animated-emoji {
+    width: 40px; 
+    height: 40px; 
+    margin: 0 5px;
+  }
+  
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    80% {
+        opacity: 1;
+        // transform: translateY(-420px);
+      }
+    100% {
+      opacity: 0;
+      transform: translateY(-420px);
+    }
+  }

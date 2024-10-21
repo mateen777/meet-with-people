@@ -41,26 +41,26 @@
                                     <span class="material-symbols-rounded cursor-pointer">more_vert</span>
                                 </div>
                                 <div class="w-full h-full">
-                                    <video class="object-cover w-full h-full absolute top-0 left-0 pointer-events-none -scale-x-100" autoplay [srcObject]="remoteVideo"></video>
-                                    <div *ngIf="!isAudioAllowed || !isVideoAllowed" class="absolute w-full h-full top-0 left-0 flex flex-col gap-1 items-center justify-center">
-                                        <span *ngIf="!isAudioAllowed && !isVideoAllowed" class="text-xl">{{'Do you want people to see and hear you in the meeting?'}}</span>
-                                        <span *ngIf="isAudioAllowed && !isVideoAllowed" class="text-xl">{{'Do you want people to see you in the meeting?'}}</span>
-                                        <span *ngIf="!isAudioAllowed && isVideoAllowed && !this.remoteVideo" class="text-xl">{{'Do you want people to hear you in the meeting?'}}</span>
-                                        <button *ngIf="!this.remoteVideo" pButton class="focus:shadow-none p-button-raised" (click)="askPermission()">
-                                            <span *ngIf="!isAudioAllowed && !isVideoAllowed" class="font-semibold">Allow Microphone and Camera</span>
-                                            <span *ngIf="isAudioAllowed && !isVideoAllowed" class="font-semibold">Allow Camera</span>
-                                            <span *ngIf="!isAudioAllowed && isVideoAllowed" class="font-semibold">Allow Microphone</span>
+                                    <video class="object-cover w-full h-full absolute top-0 left-0 pointer-events-none -scale-x-100" autoplay [srcObject]="this.mediasoupService.localVideo"></video>
+                                    <div *ngIf="!this.mediasoupService.isAudioAllowed || !this.mediasoupService.isVideoAllowed" class="absolute w-full h-full top-0 left-0 flex flex-col gap-1 items-center justify-center">
+                                        <span *ngIf="!this.mediasoupService.isAudioAllowed && !this.mediasoupService.isVideoAllowed" class="text-xl">{{'Do you want people to see and hear you in the meeting?'}}</span>
+                                        <span *ngIf="this.mediasoupService.isAudioAllowed && !this.mediasoupService.isVideoAllowed" class="text-xl">{{'Do you want people to see you in the meeting?'}}</span>
+                                        <span *ngIf="!this.mediasoupService.isAudioAllowed && this.mediasoupService.isVideoAllowed && !this.mediasoupService.localVideo" class="text-xl">{{'Do you want people to hear you in the meeting?'}}</span>
+                                        <button *ngIf="!this.mediasoupService.localVideo" pButton class="focus:shadow-none p-button-raised" (click)="askPermission()">
+                                            <span *ngIf="!this.mediasoupService.isAudioAllowed && !this.mediasoupService.isVideoAllowed" class="font-semibold">Allow Microphone and Camera</span>
+                                            <span *ngIf="this.mediasoupService.isAudioAllowed && !this.mediasoupService.isVideoAllowed" class="font-semibold">Allow Camera</span>
+                                            <span *ngIf="!this.mediasoupService.isAudioAllowed && this.mediasoupService.isVideoAllowed" class="font-semibold">Allow Microphone</span>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="absolute bottom-0 left-0 z-10 w-full flex gap-4 items-center justify-center p-3 text-base">
-                                    <button pButton (click)="toggleMic($event)" pTooltip="Turn on microphone(ctrl + d)" tooltipStyleClass="max-w-none text-sm" [autoHide]="false" tooltipPosition="top" class="mic w-14 h-14 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': isMicOn,'hover:bg-[#ef44440a]':!isMicOn,'active_shadow':isMicOn,'deactive_shadow':!isMicOn}">
-                                        <span *ngIf="isMicOn" class="material-symbols-rounded cursor-pointer text-3xl rounded-full flex items-center justify-center">mic</span>
-                                        <span *ngIf="!isMicOn"class="material-symbols-rounded cursor-pointer text-red-500 text-3xl rounded-full flex items-center justify-center">mic_off</span>
+                                    <button pButton (click)="toggleMic($event)" pTooltip="Turn on microphone(ctrl + d)" tooltipStyleClass="max-w-none text-sm" [autoHide]="false" tooltipPosition="top" class="mic w-14 h-14 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mediasoupService.isMicOn,'hover:bg-[#ef44440a]':!mediasoupService.isMicOn,'active_shadow':mediasoupService.isMicOn,'deactive_shadow':!mediasoupService.isMicOn}">
+                                        <span *ngIf="mediasoupService.isMicOn" class="material-symbols-rounded cursor-pointer text-3xl rounded-full flex items-center justify-center">mic</span>
+                                        <span *ngIf="!mediasoupService.isMicOn"class="material-symbols-rounded cursor-pointer text-red-500 text-3xl rounded-full flex items-center justify-center">mic_off</span>
                                     </button>
-                                    <button pButton (click)="toggleVideo($event)" pTooltip="Turn on camera(ctrl + e)" tooltipStyleClass="max-w-none text-sm" tooltipPosition="top" class="mic w-14 h-14 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': isVideoOn,'hover:bg-[#ef44440a]':!isVideoOn,'active_shadow':isVideoOn,'deactive_shadow':!isVideoOn}">
-                                        <span *ngIf="isVideoOn" class="material-symbols-rounded cursor-pointer text-3xl rounded-full flex items-center justify-center ">videocam</span>
-                                        <span *ngIf="!isVideoOn" class="material-symbols-rounded cursor-pointer text-red-500 text-3xl rounded-full flex items-center justify-center">videocam_off</span>
+                                    <button pButton (click)="toggleVideo($event)" pTooltip="Turn on camera(ctrl + e)" tooltipStyleClass="max-w-none text-sm" tooltipPosition="top" class="mic w-14 h-14 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mediasoupService.isVideoOn,'hover:bg-[#ef44440a]':!mediasoupService.isVideoOn,'active_shadow':mediasoupService.isVideoOn,'deactive_shadow':!mediasoupService.isVideoOn}">
+                                        <span *ngIf="mediasoupService.isVideoOn" class="material-symbols-rounded cursor-pointer text-3xl rounded-full flex items-center justify-center ">videocam</span>
+                                        <span *ngIf="!mediasoupService.isVideoOn" class="material-symbols-rounded cursor-pointer text-red-500 text-3xl rounded-full flex items-center justify-center">videocam_off</span>
                                     </button>
                                 </div>
                             </div>
@@ -107,7 +107,20 @@
                     <section class="max-w-sm flex-grow flex">
                         <div class="text-center">
                             <h1>Ready to join?</h1>
-                            <h4>No one else is here</h4>
+                            <h4 *ngIf="mediasoupService.peers.length == 0">No one else is here</h4>
+                            <div *ngIf="mediasoupService.peers.length > 0" class="mb-3 flex items-center justify-center gap-1 ">
+                                <ng-container *ngFor="let peer of this.mediasoupService.peers; let i = index">
+                                    <button *ngIf="i < 5 && peer.image && peer.id != socketService.socketId" class="bg-transparent border-none p-0" pTooltip="{{peer.peer_name}}" tooltipStyleClass="max-w-none text-sm">
+                                        <p-avatar [image]="peer.image" size="normal" shape="circle"></p-avatar>
+                                    </button>
+                                    <button *ngIf="i < 5 && !peer.image && peer.id != socketService.socketId" class="bg-transparent border-none p-0" pTooltip="{{peer.peer_name}}" tooltipStyleClass="max-w-none text-sm">
+                                        <p-avatar label="{{ peer.peer_name?.charAt(0) | uppercase }}" shape="circle" size="normal" [style]="{ 'background-color': '#9c27b0', color: '#ffffff' }"></p-avatar>
+                                    </button>
+                                    <button *ngIf="i > 4" class="bg-transparent border-none p-0" pTooltip="{{peer.peer_name}}" tooltipStyleClass="max-w-none text-sm">
+                                        <p-avatar  label="+{{ mediasoupService.peers.length - 5 }}" shape="circle" size="normal" [style]="{ 'background-color': '#9c27b0', color: '#ffffff' }"></p-avatar>
+                                    </button>
+                                </ng-container>
+                            </div>
                             <div class="flex gap-2">
                                 <div class="flex-grow">
                                     <p-button (onClick)="joinNow()" styleClass="focus:shadow-none h-[50px] p-button-rounded" label="Join Now" type="button" ></p-button>

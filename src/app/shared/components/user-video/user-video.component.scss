@@ -1,0 +1,135 @@
+.font_size{
+    font-size: clamp(1rem, 2vw + .75rem, 3rem);
+}
+
+#audioVisualizer {
+    display: flex;
+    height: 1.625em;
+    width: 1.625em;
+    align-items: center;
+    background-color: rgba(26, 115, 232, 0.9);
+    border-radius: 50%;
+    color: #fff;
+    justify-content: center;
+    overflow: hidden;
+    gap: 2px;
+  }
+  
+  #left,
+  #right {
+    width: 0.25em;
+    min-height: 0.25em;
+    background-color: white;
+    border-radius: 12px;
+    max-height: 0.5em;
+    /* min-height: 1em; */
+  }
+  
+  #middle {
+    width: 0.25em;
+    min-height: 0.25em;
+    background-color: white;
+    border-radius: 12px;
+    max-height: 1em;
+    /* margin-left: 2px;
+    margin-right: 2px; */
+  }
+
+  .hand-raise{
+    border-radius: .75rem;
+    height: 1.5rem;
+    left: 0;
+    position: absolute;
+    // top: .075rem;
+    width: 100%;
+    background-color: #fff;
+    animation: expandPill 1s cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes expandPill {
+    0% {
+      margin-left: .25rem;
+      transform: scale(0);
+      width: 1.5rem;
+    }
+    36.7% {
+      margin-left: .25rem;
+      transform: scale(1.1);
+      width: 1.5rem;
+    }
+    75% {
+      margin-left: .25rem;
+      transform: scale(1);
+      width: 1.5rem;
+    }
+    100% {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+
+  .hand{
+    align-items: center;
+    color: #fff;
+    display: flex;
+    font-size: .875rem;
+    position: relative;
+    color: rgb(32, 33, 36);
+    animation: popUpIcon .75s cubic-bezier(.4,0,.2,1), rotateIcon .9s cubic-bezier(.4,0,.2,1) .75s;
+    transform-origin: bottom;
+  }
+
+  @keyframes popUpIcon {
+    0% {
+      transform: translateY(24px);
+    }
+    22% {
+        transform: translateY(24px);
+    }
+    48.93% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+  }
+  
+  @keyframes rotateIcon {
+    20.33% {
+      transform: rotate(14deg);
+    }
+    38.89% {
+        transform: rotate(-9deg);
+    }
+    57.44% {
+        transform: rotate(14deg);
+    }
+    74.11% {
+        transform: rotate(-9deg);
+    }
+    88.89% {
+        transform: rotate(5deg);
+    }
+    0% {
+        transform: rotate(0deg);
+    }
+  }
+
+  .expand_name{
+    margin-left: .5rem;
+    color: rgb(32, 33, 36);
+    text-shadow: none;
+    animation: expandName 1s cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes expandName {
+    0% {
+      width: 0;
+    }
+    75% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+  }

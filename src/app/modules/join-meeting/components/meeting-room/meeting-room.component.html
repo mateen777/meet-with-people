@@ -1,0 +1,237 @@
+<p-menu #menu [model]="items" styleClass="w-60" [popup]="true"></p-menu>
+<p-menu #emojiColormenu [model]="emojicolorVarients" styleClass="w-fit" [popup]="true" (onShow)="isEmojiColorMenuActive = true" (onHide)="isEmojiColorMenuActive = false">
+  
+</p-menu>
+
+<div class="h-full w-full fixed min-h-full top-0 left-0">
+  
+  <div class="absolute top-0 left-0 right-0" [ngStyle]="isEmojiVisible ? {'bottom': '120px','height': 'calc(100% - 120px)'} : {'bottom': '80px','height': 'calc(100% - 80px)'}" style="transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), bottom 0.2s cubic-bezier(0.4, 0, 0.2, 1), height 0.2s cubic-bezier(0.4, 0, 0.2, 1);">  
+  <!-- users -->
+  <div class="absolute top-0 left-0 bottom-0" [ngStyle]="{'right': sideNavOpen ? '374px' : '0px'}">
+    
+    <ng-container *ngIf="mS.sharing_enable">
+      <div class="flex w-full flex-col h-[calc(100%-34px)]">
+        <div class="p-2 mb-2 bg-[--surface-card]">
+          {{mS.sharing_peer.peer_name}}
+        </div>
+        <div class="flex w-full h-full flex-grow">
+          <div class="flex-grow">
+            <div class="w-full h-full relative bg-[--surface-card] rounded-xl overflow-hidden transition-all">
+              <app-user-video [id]="mS.sharing_peer.id"
+                [userName]="mS.sharing_peer.peer_name"
+                [videoStream]="mS.sharing_peer.video"
+                [audioStream]="mS.sharing_peer.audio"
+                [screenStream]="mS.sharing_peer.screen"
+                [users]="mS.peers"
+              >
+              </app-user-video>
+            </div>
+          </div>
+          <div class="flex-grow-0 ml-[6px] overflow-auto">
+            <ng-container *ngFor="let peer of mS.peers; let i = index;trackBy:peerById">
+              <div class="w-80 h-[15rem] m-1 relative bg-[--surface-card] rounded-xl overflow-hidden transition-all">
+                <app-user-video [id]="peer.id"
+                  [peer]="peer"
+                  [userName]="peer.peer_name"
+                  [videoStream]="peer.video"
+                  [audioStream]="peer.audio"
+                  [screenStream]="peer.screen"
+                  [users]="mS.peers"
+                  [bg_color]="peer.bg_color"
+
+                  
+                >
+                </app-user-video>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!mS.sharing_enable">
+      <div #videogridContainer class="absolute bottom-0 flex flex-wrap flex-row h-full w-full overflow-hidden justify-center items-center">
+          <ng-container *ngFor="let peer of mS.peers; let i = index">
+            
+            <div #videoitem class="relative inline-block bg-[--surface-card] rounded-xl overflow-hidden transition-all">
+              <app-user-video [id]="peer.id"
+                [userName]="peer.peer_name"
+                [peer]="peer"
+                [videoStream]="peer.video"
+                [audioStream]="peer.audio"
+                [screenStream]="peer.screen"
+                [users]="mS.peers"
+                [bg_color]="peer.bg_color"
+              >
+              </app-user-video>
+            </div>
+          </ng-container>
+      </div>
+    </ng-container>
+  </div>
+  <!-- end  -->
+
+  <!-- sideNav -->
+  <div class="sidenav" [ngClass]="{'close_sidenav': !sideNavOpen}">
+      <span>dawvdjhwvad</span>
+  </div>
+  <div class="reaction-display" *ngFor="let reaction of reactions" [ngStyle]="{'left': reaction.left}">
+    <img [src]="reaction.src" [alt]="reaction.emoji" class="animated-emoji">
+    <span class="flex items-center justify-center p-1 rounded-full bg-[var(--highlight-bg)] text-white text-center">{{'you' | titlecase}}</span>
+  </div>
+  </div>
+  <!-- emoji container -->
+  <!-- <div class="noto-color-emoji-regular text-2xl">
+    💖 👍 🎉 👏 😂 😮 😢 🤔 👎
+  </div> -->
+  <div class="emoji-container" [ngClass]="{'close-emoji-container': isEmojiVisible}">
+    <div class="emojies">
+      <div class="relative max-w-full">
+        <div class="flex items-center h-full">
+          <div class="flex flex-nowrap max-w-full overflow-x-scroll overflow-y-hidden" style="scrollbar-width: none;">
+            <div class="inline-block w-10 h-10 relative" *ngFor="let emoji of emojies; let i = index">
+              <div>
+                <button (click)="sendReaction(emoji,i)" class="inline-flex items-center justify-center p-0 w-10 h-10 rounded-full cursor-pointer border-none bg-[#071426] hover:bg-[var(--surface-c)]">
+                  <div class="noto-color-emoji-regular text-2xl">
+                    {{emoji.emoji_skintone ? emoji.emoji_skintone[emojiIndex] :emoji.emoji}}
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div #emojibtn (click)="emojiColormenu.toggle($event)" class="emoji-btn flex items-center flex-shrink-0 h-10 ml-3 opacity-0 transition-opacity duration-300 ease-in delay-300 hover:opacity-100 cursor-pointer" [ngClass]="{'opacity-100': isEmojiColorMenuActive}">
+      <span class="w-10 h-10 p-2">
+        <button [ngStyle]="{background: emojiColor}" class="w-[22px] h-[22px] outline outline-offset-2 outline-2 rounded-full border-none cursor-pointer"></button>
+      </span>
+    </div>
+  </div>
+  <!-- end emoji -->
+  <div class="w-full absolute bottom-0 p-1 mb-3 flex items-center h-[60px]">
+      <div class="ml-2 basis-1/3">
+        <span class="text-base font-semibold text-[var(--surface-900)]">
+          {{ today | date:"h:mm a"}}
+        </span>
+      </div>
+      <!-- middle buttons -->
+      <div class="basis-1/3 flex gap-2 justify-center">
+        <button pButton (click)="toggleMic($event)" pTooltip="Turn on microphone(ctrl + d)" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isMicOn,'hover:bg-[#ef44440a]':!mS.isMicOn,'active_shadow':mS.isMicOn,'deactive_shadow':!mS.isMicOn}">
+          <span *ngIf="mS.isMicOn" class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center">mic</span>
+          <span *ngIf="!mS.isMicOn"class="material-symbols-rounded cursor-pointer text-red-500 text-2xl rounded-full flex items-center justify-center">mic_off</span>
+        </button>
+        <button pButton (click)="toggleVideo($event)" pTooltip="Turn on camera(ctrl + e)" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isVideoOn,'hover:bg-[#ef44440a]':!mS.isVideoOn,'active_shadow':mS.isVideoOn,'deactive_shadow':!mS.isVideoOn}">
+            <span *ngIf="mS.isVideoOn" class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">videocam</span>
+            <span *ngIf="!mS.isVideoOn" class="material-symbols-rounded cursor-pointer text-red-500 text-2xl rounded-full flex items-center justify-center">videocam_off</span>
+        </button>
+        <!-- <button pButton pTooltip="Turn on captions(c)" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isVideoOn,'hover:bg-[#ef44440a]':!mS.isVideoOn,'active_shadow':mS.isVideoOn,'deactive_shadow':!mS.isVideoOn}">
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">closed_caption</span>
+        </button> -->
+        <button pButton (click)="toggleEmoji()" pTooltip="Send a reaction" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isVideoOn,'hover:bg-[#ef44440a]':!mS.isVideoOn,'active_shadow':mS.isVideoOn,'deactive_shadow':!mS.isVideoOn}">
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">mood</span>
+        </button>
+        <button pButton (click)="toggleScreen($event)" pTooltip="present now" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isScreenOn,'hover:bg-[#ef44440a]':!mS.isScreenOn,'active_shadow':mS.isScreenOn,'deactive_shadow':!mS.isScreenOn,'text-red-500':!mS.isScreenOn}">
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">present_to_all</span>
+        </button>
+        <button pButton (click)="toggleHand($event)" pTooltip="raise hand (ctrl + alt + h)" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isVideoOn,'hover:bg-[#ef44440a]':!mS.isVideoOn,'active_shadow':mS.isVideoOn,'deactive_shadow':!mS.isVideoOn}">
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">back_hand</span>
+        </button>
+        
+        <button pButton (click)="menu.toggle($event)" pTooltip="more options" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isVideoOn,'hover:bg-[#ef44440a]':!mS.isVideoOn,'active_shadow':mS.isVideoOn,'deactive_shadow':!mS.isVideoOn}">
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">more_vert</span>
+        </button>
+        
+        <button pButton (click)="leaveRoom()" pTooltip="Leave call" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-16 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text text-[#ef4444] deactive_shadow hover:bg-[#ef44440a]" >
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">call_end</span>
+        </button>
+      </div>
+      <!-- end middle buttons -->
+
+      <!-- right end buttons -->
+      <div class="basis-1/3 flex gap-2 justify-end">
+          <button pButton (click)="openSideNav()" pTooltip="Meeting details" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isVideoOn,'hover:bg-[#ef44440a]':!mS.isVideoOn,'active_shadow':mS.isVideoOn,'deactive_shadow':!mS.isVideoOn}">
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">info</span>
+          </button>
+          <button pButton pTooltip="show everyone" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isVideoOn,'hover:bg-[#ef44440a]':!mS.isVideoOn,'active_shadow':mS.isVideoOn,'deactive_shadow':!mS.isVideoOn}">
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">group</span>
+          </button>
+          <button pButton pTooltip="chat with everyone" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isVideoOn,'hover:bg-[#ef44440a]':!mS.isVideoOn,'active_shadow':mS.isVideoOn,'deactive_shadow':!mS.isVideoOn}">
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">chat</span>
+          </button>
+          <button pButton pTooltip="Host controls" [showDelay]="300" tooltipStyleClass="tooltip-padding max-w-none pb-2 text-xs" tooltipPosition="top" class="mic w-12 h-12 p-0 justify-center p-button-rounded p-button-raised p-button-text" [ngClass]="{'hover:bg-[#2dd4bf0a]': mS.isVideoOn,'hover:bg-[#ef44440a]':!mS.isVideoOn,'active_shadow':mS.isVideoOn,'deactive_shadow':!mS.isVideoOn}">
+            <span  class="material-symbols-rounded cursor-pointer text-2xl rounded-full flex items-center justify-center ">lock_person</span>
+          </button>
+      </div>
+      <!-- end of right end buttons -->
+  </div>
+</div>
+
+
+<!-- menu -->
+<!-- <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="roomMenu" [cdkConnectedOverlayOpen]="open"
+         [cdkConnectedOverlayPanelClass]="'menu-panel'"
+        cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop" [cdkConnectedOverlayHasBackdrop]="true"
+        (backdropClick)="open = false"
+>
+<ul class="list-none p-3 mb-2 border-2 border-white">
+  <li class="p-1">Item 1</li>
+  <li class="p-1">Item 2</li>
+  <li class="p-1">Item 3</li>
+</ul>
+</ng-template> -->
+
+
+
+
+<!-- <div class="h-[calc(100%-72px)]">  
+  users
+  <div class="absolute top-0 left-0 bottom-20 pt-3" [ngStyle]="{'right': sideNavOpen ? '374px' : '0px'}">
+    
+    <ng-container *ngFor="let user of users">
+      
+      <ng-container *ngIf="users.length == 2">
+        <div class="relative w-full h-full">
+          <div class="absolute w-full bg-teal-600"></div>
+          <div class="absolute "></div>
+        </div>
+      </ng-container>
+
+    </ng-container>
+
+  </div>
+  end 
+
+  sideNav
+  <div class="sidenav" [ngClass]="{'close_sidenav': !sideNavOpen}">
+      <span>dawvdjhwvad</span>
+  </div>
+</div> -->
+
+
+<!-- <div #videogridContainer class="flex flex-wrap flex-row gap-2 h-full overflow-auto justify-center items-center" [ngClass]="{'grid sm:grid-cols-2': users.length === 90}"> -->
+  <!-- <div #videogridContainer class="flex flex-wrap flex-row h-full w-full overflow-hidden justify-center items-center transition-all">
+    <div class="grid gap-1 content-center grid-cols-1 sm:grid-cols-2 md:grid-flow-col h-full overflow-auto">
+
+      <ng-container *ngFor="let peer of mS.peers; let i = index">
+        
+        w-80 h-64
+        <div class="relative mx-2 aspect-video  w-full min-w-[16rem] max-h-full bg-[--surface-card] rounded-xl overflow-hidden"></div>
+        <div class="relative aspect-video min-w-[16rem] max-h-full bg-[--surface-card] rounded-xl overflow-hidden"
+        [ngClass]="{'flex-grow w-[30rem] h-[30rem]': users.length === 2,'w-[27rem] h-[24rem]': users.length === 3,'w-[29rem] h-[16rem]': users.length === 4,'users5': users.length === 5 && !sideNavOpen,'users5Nav': users.length === 5 && sideNavOpen,'users6': users.length === 6 && !sideNavOpen,'users6Nav': users.length === 6 && sideNavOpen}">
+        </div>
+
+
+        <div #videoitem class="relative inline-block bg-[--surface-card] rounded-xl overflow-hidden transition-all">
+          <app-user-video [id]="peer.id"
+            [userName]="peer.peer_name"
+            [videoStream]="peer.video"
+            [audioStream]="peer.audio"
+            [screenStream]="peer.screen"
+            [users]="mS.peers"
+          >
+          </app-user-video>
+        </div>
+      </ng-container>
+    
+    </div> -->

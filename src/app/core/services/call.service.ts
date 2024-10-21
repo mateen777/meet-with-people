@@ -32,7 +32,7 @@ export class CallService {
 	}
 
     getSessionId(): Observable<any> {
-		return this.http.requestCall('/sessions', ApiMethod.POST);
+		return this.http.requestCall('/sessions', ApiMethod.POST,{});
 	}
 
     getTokens(sessionId:any,nickname:any):any {
